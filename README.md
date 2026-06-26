@@ -4,7 +4,7 @@ AI/API SupportOps service for SUST CSE Carnival 2026 · Codex Community Hackatho
 
 ## Tech Stack
 - **Framework**: FastAPI + Uvicorn
-- **AI Model**: `llama-3.3-70b-versatile` via [Groq](https://console.groq.com) (free, no credit card)
+- **AI Model**: `llama-3.3-70b-versatile` via [Groq](https://console.groq.com)
 - **Client**: `openai` Python SDK pointed at Groq's OpenAI-compatible endpoint
 
 ## MODELS
