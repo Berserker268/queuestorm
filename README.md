@@ -10,13 +10,13 @@ AI/API SupportOps service for SUST CSE Carnival 2026 · Codex Community Hackatho
 ## MODELS
 | Model | Provider | Why |
 |---|---|---|
-| llama-3.3-70b-versatile | Groq (free tier) | Strong instruction-following, fast (~300 tok/s), free with no credit card, OpenAI-compatible API |
+| llama-3.3-70b-versatile | Groq | Strong instruction-following, fast (~300 tok/s), free with no credit card, OpenAI-compatible API |
 
 ## Setup
 
 ### 1. Get a free Groq API key
 1. Go to https://console.groq.com/keys
-2. Sign up with just an email (no credit card)
+2. Sign up with just an email
 3. Create a new API key and copy it
 
 ### 2. Run locally
