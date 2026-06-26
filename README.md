@@ -1,64 +1,94 @@
 # QueueStorm Investigator
 
-AI/API SupportOps service for SUST CSE Carnival 2026 · Codex Community Hackathon.
+An AI-powered SupportOps API service for intelligent ticketing and complaint analysis in digital finance platforms. Built for SUST CSE Carnival 2026 · Codex Community Hackathon.
+
+**QueueStorm** leverages large language models (LLMs) to automatically analyze support tickets, cross-reference transaction histories, and provide structured recommendations for support agents—all while enforcing strict security guardrails.
+
+
+
+## Features
+
+✅ **Intelligent Ticket Analysis**
+- Automatically categorizes support complaints into predefined case types
+- Extracts relevant transaction IDs and correlates with complaint context
+- Assigns severity levels (low, medium, high, critical)
+- Recommends appropriate departments for escalation
+
+✅ **Transaction-Aware Reasoning**
+- Cross-references complaint text with transaction history
+- Validates evidence consistency (consistent, inconsistent, insufficient)
+- Supports up to 200 transaction entries per ticket
+- Handles multiple transaction types (transfers, payments, cash-in/out, settlements, refunds)
+
+✅ **Multilingual Support**
+- English and Bengali language support for customer replies
+- Language-aware safe response fallbacks
+
+✅ **Security-First Design**
+- Blocks forbidden content (PIN, OTP, passwords, CVV, full card numbers)
+- Never commits to refunds or reversals in automated replies
+- Prevents prompt injection in complaint text
+- Automatic flagging for human review when safety concerns detected
+
+✅ **Structured Output**
+- Returns valid JSON conforming to strict schema
+- Includes confidence scores and reason codes for audit trails
+- Pydantic v2 validation ensures type safety
+
+---
 
 ## Tech Stack
-- **Framework**: FastAPI + Uvicorn
-- **AI Model**: `llama-3.3-70b-versatile` via [Groq](https://console.groq.com)
-- **Client**: `openai` Python SDK pointed at Groq's OpenAI-compatible endpoint
 
-## MODELS
-| Model | Provider | Why |
-|---|---|---|
-| llama-3.3-70b-versatile | Groq | Strong instruction-following, fast (~300 tok/s), free with no credit card, OpenAI-compatible API |
+| Component | Technology |
+|---|---|
+| **Framework** | FastAPI 0.115.0 + Uvicorn |
+| **AI Model** | Llama 3.3 70B Versatile via Groq |
+| **API Client** | OpenAI Python SDK (OpenAI-compatible) |
+| **Data Validation** | Pydantic v2.9.2 |
+| **Async Runtime** | asyncio |
+| **Containerization** | Docker |
 
-## Setup
+### Why Groq?
 
-### 1. Get a free Groq API key
-1. Go to https://console.groq.com/keys
-2. Sign up with just an email
-3. Create a new API key and copy it
+- **Fast inference**: ~300 tokens/second
+- **Free tier**: 30 RPM, 1,000 RPD (sufficient for hackathon)
+- **No credit card required**: Simple email signup
+- **OpenAI-compatible API**: Drop-in replacement for OpenAI SDK
+- **Strong multilingual capabilities**: Handles English and Bengali
 
-### 2. Run locally
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.9+
+- A free Groq API key (30 seconds to obtain)
+- Docker (optional)
+
+### 1. Get a Groq API Key
+
+1. Visit [https://console.groq.com/keys](https://console.groq.com/keys)
+2. Sign up with your email
+3. Generate a new API key
+4. Copy the key to a safe location
+
+### 2. Run Locally
 
 ```bash
-# Clone and enter directory
+# Clone the repository
+git clone https://github.com/Berserker268/queuestorm.git
 cd queuestorm
+
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Set your Groq API key
-export GROQ_API_KEY=your_key_here
+# Set Groq API key
+export GROQ_API_KEY=gsk_your_key_here
 
 # Start the server
 uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-### 3. Run with Docker
-
-```bash
-docker build -t queuestorm .
-docker run -e GROQ_API_KEY=your_key_here -p 8000:8000 queuestorm
-```
-
-## Endpoints
-
-| Method | Path | Description |
-|---|---|---|
-| GET | /health | Returns `{"status":"ok"}` |
-| POST | /analyze-ticket | Analyze a support ticket |
-
-## AI Approach
-The system prompt instructs Llama 3.3 70B to act as a fintech support copilot. It performs evidence reasoning by cross-referencing the complaint with the transaction history, then outputs a structured JSON response covering case classification, department routing, severity, and a safe customer reply.
-
-## Safety Logic
-- Never requests PIN, OTP, or passwords from customers
-- Never confirms refunds — uses "eligible amount will be returned through official channels"
-- Ignores prompt injection in complaint text
-- Validated in code: all enum fields fall back to safe defaults if the model returns unexpected values
-
-## Known Limitations
-- Groq free tier: 30 RPM, 1,000 RPD — sufficient for hackathon judging
-- Bangla NLP quality depends on Llama 3.3's multilingual capability
-- No persistent storage; stateless per-request design
